@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room 2: Seasons of the Year - Code Escape</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #0a0a23;
+            color: #00ff00;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: #000;
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 2px solid #00ff00;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .room-title {
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            font-size: 2rem;
+            margin: 0;
+        }
+        
+        .difficulty {
+            color: #ccc;
+            margin-top: 0.5rem;
+        }
+        
+        .challenge-container {
+            background-color: #1a1a35;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .challenge-description {
+            background-color: #101025;
+            padding: 1rem;
+            border-left: 4px solid #00ff00;
+            margin-bottom: 1.5rem;
+        }
+        
+        .code-editor {
+            background-color: #0d0d1a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 1rem;
+            color: #f5f5f5;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 1rem;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            background-color: #0d0d1a;
+            color: #f5f5f5;
+            font-family: 'Courier New', monospace;
+            padding: 1rem;
+            border: 1px solid #333;
+            border-radius: 4px;
+            resize: vertical;
+            font-size: 16px;
+        }
+        
+        pre {
+            background-color: #101025;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        code {
+            font-family: 'Courier New', monospace;
+            color: #f5f5f5;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #00aa00;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn:hover {
+            background-color: #00cc00;
+        }
+        
+        .btn-secondary {
+            background-color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #444;
+        }
+        
+        .output-console {
+            background-color: #000;
+            color: #00ff00;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+        
+        .hint-container {
+            margin-top: 2rem;
+            background-color: #1a1a35;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: none;
+        }
+        
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+        
+        .modal-content {
+            background-color: #1a1a35;
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 500px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .timer {
+            font-size: 1.2rem;
+            text-align: right;
+            margin-bottom: 1rem;
+        }
+        
+        .virtual-terminal {
+            background-color: #000;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .input-container {
+            display: flex;
+            margin-top: 0.5rem;
+        }
+        
+        .input-container input {
+            flex-grow: 1;
+            background-color: #000;
+            border: 1px solid #333;
+            padding: 0.5rem;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .input-container button {
+            margin-left: 0.5rem;
+        }
+        
+        .close-warning {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ff3333;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .season-emoji {
+            font-size: 3rem;
+            margin: 1rem 0;
+            text-shadow: 0 0 10px #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="room-title">🗓️ ROOM 2: SEASONS OF THE YEAR</h1>
+        <div class="difficulty">Difficulty: Medium</div>
+    </header>
+    
+    <div class="container">
+        <div class="timer">Time: <span id="time-counter">00:00</span></div>
+        
+        <div class="challenge-container">
+            <div class="challenge-description">
+                <h2>The Challenge</h2>
+                <p>Ah, the four seasons in the year — winter, spring, summer, or fall; all you have to do is call!</p>
+                <p>Write a Python program that:</p>
+                <ol>
+                    <li>Asks the user for a month number (1-12) using the <code>input()</code> function.</li>
+                    <li>Checks for the four seasons using an <code>if</code>/<code>elif</code>/<code>else</code> statement and logical operators:</li>
+                    <ul>
+                        <li>Month is 1, 2, 3, print 'Winter 🌨️'</li>
+                        <li>Month is 4, 5, 6, print 'Spring 🌱'</li>
+                        <li>Month is 7, 8, 9, print 'Summer 🌻'</li>
+                        <li>Month is 10, 11, 12, print 'Autumn 🍂'</li>
+                        <li>Everything else is 'Invalid'</li>
+                    </ul>
+                </ol>
+                <p>Logical operators in Python include the <code>and</code> and <code>or</code> keywords. Which one should you use?</p>
+                <p>The output could look something like this:</p>
+                <pre><code>Enter a month number (1-12): 3
+Winter 🌨️
+
+Enter a month number (1-12): 6
+Spring 🌱
+
+Enter a month number (1-12): 13
+Invalid</code></pre>
+            </div>
+            
+            <textarea id="code-editor"># Write your solution here
+# "Seasons of the Year" challenge
+
+</textarea>
+            
+            <div class="action-buttons">
+                <button class="btn" id="run-btn">Run Code</button>
+                <button class="btn btn-secondary" id="hint-btn">Get Hint</button>
+                <button class="btn btn-secondary" id="reset-btn">Reset</button>
+            </div>
+            
+            <div class="output-console" id="output-console">
+                # Output will appear here
+            </div>
+            
+            <div class="virtual-terminal" id="virtual-terminal">
+                <div id="terminal-output"></div>
+                <div class="input-container" id="input-container" style="display: none;">
+                    <input type="text" id="user-input" placeholder="Type your response here">
+                    <button class="btn" id="submit-input">Submit</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hint-container" id="hint-container">
+            <h3>Hint</h3>
+            <p>Here's a structure to get you started:</p>
+            <pre><code># Ask the user for a month number (1-12)
+month = int(input("Enter a month number (1-12): "))
+
+# Use if/elif/else with logical operators to check the season
+if month == 1 or month == 2 or month == 3:
+    print("Winter 🌨️")
+elif # continue with the other seasons
+    # ...
+else:
+    print("Invalid")
+</code></pre>
+            <p>Remember to use the <code>or</code> operator when checking multiple possible values for the same variable. Don't forget to convert the input to an integer using <code>int()</code> since <code>input()</code> returns a string.</p>
+        </div>
+    </div>
+    
+    <div class="success-modal" id="success-modal">
+        <div class="modal-content">
+            <h2>🎉 Challenge Complete! 🎉</h2>
+            <p>You've successfully completed the "Seasons of the Year" challenge!</p>
+            <div class="season-emoji" id="season-emoji">🌨️🌱🌻🍂</div>
+            <p>You can now proceed to the next room.</p>
+            <div class="modal-buttons">
+                <button class="btn" id="next-room-btn">Proceed to Room 3</button>
+                <button class="btn btn-secondary" id="return-btn">Return to Hub</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="close-warning" id="close-warning">
+        Closing this window will NOT complete the challenge!
+    </div>
+    
+    <script>
+        // Flag to track if challenge is completed
+        let challengeCompleted = false;
+        
+        // Start timer
+        let seconds = 0;
+        setInterval(function() {
+            seconds++;
+            let minutes = Math.floor(seconds / 60);
+            let remainingSeconds = seconds % 60;
+            document.getElementById('time-counter').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }, 1000);
+        
+        // Elements
+        const codeEditor = document.getElementById('code-editor');
+        const outputConsole = document.getElementById('output-console');
+        const terminalOutput = document.getElementById('terminal-output');
+        const inputContainer = document.getElementById('input-container');
+        const userInput = document.getElementById('user-input');
+        const submitInput = document.getElementById('submit-input');
+        const hintContainer = document.getElementById('hint-container');
+        const successModal = document.getElementById('success-modal');
+        const closeWarning = document.getElementById('close-warning');
+        
+        // Mock Python environment
+        let mockInputs = [];
+        let mockInputIndex = 0;
+        let runningCode = false;
+        let codeCompleted = false;
+        let testCases = [
+            { input: "3", expected: "Winter 🌨️" },
+            { input: "5", expected: "Spring 🌱" },
+            { input: "8", expected: "Summer 🌻" },
+            { input: "11", expected: "Autumn 🍂" },
+            { input: "13", expected: "Invalid" }
+        ];
+        let currentTestCase = 0;
+        let hasIfStatement = false;
+        let hasLogicalOperator = false;
+        let hasInputFunction = false;
+        let hasAllSeasons = false;
+        
+        // Event listener for Run Code button
+        document.getElementById('run-btn').addEventListener('click', function() {
+            runCode();
+        });
+        
+        // Event listener for Hint button
+        document.getElementById('hint-btn').addEventListener('click', function() {
+            hintContainer.style.display = 'block';
+        });
+        
+        // Event listener for Reset button
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            resetSimulation();
+        });
+        
+        // Event listener for Next Room button
+        document.getElementById('next-room-btn').addEventListener('click', function() {
+            if (challengeCompleted) {
+                // Store completion status in localStorage with a secure token
+                const completionToken = generateCompletionToken();
+                localStorage.setItem('room2_completed', 'true');
+                localStorage.setItem('room2_completion_token', completionToken);
+                
+                // Send completion status to parent window
+                if (window.opener && !window.opener.closed) {
+                    try {
+                        window.opener.markRoomAsCompleted(2, completionToken);
+                    } catch (e) {
+                        console.error('Error updating parent window:', e);
+                    }
+                }
+                
+                // Open Room 3 if possible
+                if (window.opener && !window.opener.closed) {
+                    window.opener.startGame(3);
+                }
+                window.close();
+            }
+        });
+        
+        // Event listener for Return button
+        document.getElementById('return-btn').addEventListener('click', function() {
+            if (challengeCompleted) {
+                // Store completion status in localStorage with a secure token
+                const completionToken = generateCompletionToken();
+                localStorage.setItem('room2_completed', 'true');
+                localStorage.setItem('room2_completion_token', completionToken);
+                
+                // Send completion status to parent window
+                if (window.opener && !window.opener.closed) {
+                    try {
+                        window.opener.markRoomAsCompleted(2, completionToken);
+                    } catch (e) {
+                        console.error('Error updating parent window:', e);
+                    }
+                }
+            }
+            window.close();
+        });
+        
+       // Generate a completion token
+       function generateCompletionToken() {
+            // Create a random token that includes the completion time
+            return 'room2_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15);
+        }
+        
+        // Submit input in virtual terminal
+        submitInput.addEventListener('click', function() {
+            const input = userInput.value;
+            mockInputs.push(input);
+
+            // Display input in terminal
+            terminalOutput.innerHTML += `<div>Enter a month number (1-12): ${input}</div>`;
+            
+            // Reset input field
+            userInput.value = '';
+            
+            // Process the input
+            try {
+                const month = parseInt(input);
+                let season = "";
+                
+                if (month >= 1 && month <= 3) {
+                    season = "Winter 🌨️";
+                } else if (month >= 4 && month <= 6) {
+                    season = "Spring 🌱";
+                } else if (month >= 7 && month <= 9) {
+                    season = "Summer 🌻";
+                } else if (month >= 10 && month <= 12) {
+                    season = "Autumn 🍂";
+                } else {
+                    season = "Invalid";
+                }
+                
+                terminalOutput.innerHTML += `<div>${season}</div><br>`;
+                
+                // Check if this is the right answer for the current test case
+                if (season === testCases[currentTestCase].expected) {
+                    currentTestCase++;
+                    if (currentTestCase < testCases.length) {
+                        // Continue to next test case
+                        setTimeout(() => {
+                            userInput.focus();
+                        }, 300);
+                    } else {
+                        // All test cases passed
+                        inputContainer.style.display = 'none';
+                        if (hasIfStatement && hasLogicalOperator && hasInputFunction && hasAllSeasons) {
+                            codeCompleted = true;
+                            challengeCompleted = true;
+                            outputConsole.innerHTML += '# All test cases passed!\n';
+                            outputConsole.innerHTML += '# Challenge completed successfully!\n';
+                            setTimeout(() => {
+                                successModal.style.display = 'flex';
+                            }, 1000);
+                        } else {
+                            outputConsole.innerHTML += '# Your code passed all test cases, but it\'s missing some required elements.\n';
+                            if (!hasIfStatement) {
+                                outputConsole.innerHTML += '# Make sure you use if/elif/else statements.\n';
+                            }
+                            if (!hasLogicalOperator) {
+                                outputConsole.innerHTML += '# Make sure you use logical operators (and/or).\n';
+                            }
+                            if (!hasInputFunction) {
+                                outputConsole.innerHTML += '# Make sure you use the input() function.\n';
+                            }
+                            if (!hasAllSeasons) {
+                                outputConsole.innerHTML += '# Make sure you handle all seasons correctly.\n';
+                            }
+                            resetSimulation();
+                        }
+                    }
+                } else {
+                    // Wrong answer
+                    outputConsole.innerHTML += `# Test case failed. Expected "${testCases[currentTestCase].expected}" for input "${testCases[currentTestCase].input}".\n`;
+                    resetSimulation();
+                }
+            } catch (error) {
+                outputConsole.innerHTML += `# Error: ${error.message}\n`;
+                resetSimulation();
+            }
+        });
+        
+        // Simulate Python code execution
+        function runCode() {
+            if (runningCode) return;
+            
+            const userCode = codeEditor.value;
+            outputConsole.innerHTML = '# Analyzing your code...\n';
+            resetSimulation();
+            
+            // Simple code analysis
+            hasIfStatement = userCode.includes('if') && userCode.includes('elif') && userCode.includes('else');
+            hasLogicalOperator = userCode.includes('or') || userCode.includes('and');
+            hasInputFunction = userCode.includes('input(');
+            
+            // Check for all seasons
+            hasAllSeasons = userCode.includes('Winter') && 
+                            userCode.includes('Spring') && 
+                            userCode.includes('Summer') && 
+                            userCode.includes('Autumn') && 
+                            userCode.includes('Invalid');
+            
+            if (!hasIfStatement) {
+                outputConsole.innerHTML = '# Error: Your code must include if/elif/else statements.\n';
+                return;
+            }
+            
+            if (!hasLogicalOperator) {
+                outputConsole.innerHTML = '# Error: Your code must use logical operators (and/or).\n';
+                return;
+            }
+            
+            if (!hasInputFunction) {
+                outputConsole.innerHTML = '# Error: Your code must use the input() function.\n';
+                return;
+            }
+            
+            if (!hasAllSeasons) {
+                outputConsole.innerHTML = '# Error: Your code must handle all seasons and invalid inputs.\n';
+                return;
+            }
+            
+            outputConsole.innerHTML = '# Running your code...\n';
+            runningCode = true;
+            currentTestCase = 0;
+            
+            // Start the interactive simulation
+            terminalOutput.innerHTML = '';
+            inputContainer.style.display = 'flex';
+            userInput.focus();
+            
+            // Simulate code execution
+            outputConsole.innerHTML += '# Interactive terminal activated below.\n';
+            outputConsole.innerHTML += `# Testing case ${currentTestCase + 1}/${testCases.length}: Enter "${testCases[currentTestCase].input}"\n`;
+        }
+        
+        // Reset the simulation
+        function resetSimulation() {
+            runningCode = false;
+            codeCompleted = false;
+            mockInputs = [];
+            mockInputIndex = 0;
+            currentTestCase = 0;
+            terminalOutput.innerHTML = '';
+            inputContainer.style.display = 'none';
+        }
+        
+        // Show warning when user tries to close the window
+        window.addEventListener('beforeunload', function(e) {
+            if (!challengeCompleted) {
+                closeWarning.style.display = 'block';
+                setTimeout(() => {
+                    closeWarning.style.display = 'none';
+                }, 2000);
+                
+                // This will show a confirmation dialog in most browsers
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+        
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', function() {
+            codeEditor.value = '# Write your code here\n\n# Ask for the month number\n\n# Check the season using if/elif/else with logical operators\n';
+            
+            // Check if the user is trying to cheat by opening the success modal directly
+            window.addEventListener('keydown', function(e) {
+                // Prevent F12 and some other development shortcuts
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Handle input submission with Enter key
+            userInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    submitInput.click();
+                }
+            });
+            
+            // Check if user needs to be redirected
+            const requiredRoomCompleted = localStorage.getItem('room1_completed');
+            if (requiredRoomCompleted !== 'true') {
+                // Create a warning message
+                const warningContainer = document.createElement('div');
+                warningContainer.style.position = 'fixed';
+                warningContainer.style.top = '0';
+                warningContainer.style.left = '0';
+                warningContainer.style.width = '100%';
+                warningContainer.style.height = '100%';
+                warningContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                warningContainer.style.color = '#ff3333';
+                warningContainer.style.display = 'flex';
+                warningContainer.style.flexDirection = 'column';
+                warningContainer.style.alignItems = 'center';
+                warningContainer.style.justifyContent = 'center';
+                warningContainer.style.zIndex = '1000';
+                warningContainer.style.padding = '2rem';
+                warningContainer.style.textAlign = 'center';
+                
+                const warningTitle = document.createElement('h2');
+                warningTitle.textContent = '⚠️ Access Denied ⚠️';
+                warningTitle.style.color = '#ff3333';
+                warningTitle.style.marginBottom = '1rem';
+                
+                const warningText = document.createElement('p');
+                warningText.textContent = 'You must complete Room 1 before accessing Room 2!';
+                warningText.style.fontSize = '1.2rem';
+                warningText.style.marginBottom = '2rem';
+                
+                const returnButton = document.createElement('button');
+                returnButton.textContent = 'Return to Hub';
+                returnButton.className = 'btn';
+                returnButton.style.backgroundColor = '#ff3333';
+                returnButton.addEventListener('click', function() {
+                    window.close();
+                });
+                
+                warningContainer.appendChild(warningTitle);
+                warningContainer.appendChild(warningText);
+                warningContainer.appendChild(returnButton);
+                
+                document.body.appendChild(warningContainer);
+            }
+        });
+    </script>
+</body>
+</html>

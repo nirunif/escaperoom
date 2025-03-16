@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room 1: Are We There Yet? - Code Escape</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #0a0a23;
+            color: #00ff00;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: #000;
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 2px solid #00ff00;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .room-title {
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            font-size: 2rem;
+            margin: 0;
+        }
+        
+        .difficulty {
+            color: #ccc;
+            margin-top: 0.5rem;
+        }
+        
+        .challenge-container {
+            background-color: #1a1a35;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .challenge-description {
+            background-color: #101025;
+            padding: 1rem;
+            border-left: 4px solid #00ff00;
+            margin-bottom: 1.5rem;
+        }
+        
+        .code-editor {
+            background-color: #0d0d1a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 1rem;
+            color: #f5f5f5;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 1rem;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            background-color: #0d0d1a;
+            color: #f5f5f5;
+            font-family: 'Courier New', monospace;
+            padding: 1rem;
+            border: 1px solid #333;
+            border-radius: 4px;
+            resize: vertical;
+            font-size: 16px;
+        }
+        
+        pre {
+            background-color: #101025;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        code {
+            font-family: 'Courier New', monospace;
+            color: #f5f5f5;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #00aa00;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn:hover {
+            background-color: #00cc00;
+        }
+        
+        .btn-secondary {
+            background-color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #444;
+        }
+        
+        .output-console {
+            background-color: #000;
+            color: #00ff00;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+        
+        .hint-container {
+            margin-top: 2rem;
+            background-color: #1a1a35;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: none;
+        }
+        
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+        
+        .modal-content {
+            background-color: #1a1a35;
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 500px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .timer {
+            font-size: 1.2rem;
+            text-align: right;
+            margin-bottom: 1rem;
+        }
+        
+        .virtual-terminal {
+            background-color: #000;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .input-container {
+            display: flex;
+            margin-top: 0.5rem;
+        }
+        
+        .input-container input {
+            flex-grow: 1;
+            background-color: #000;
+            border: 1px solid #333;
+            padding: 0.5rem;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .input-container button {
+            margin-left: 0.5rem;
+        }
+        
+        .close-warning {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ff3333;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="room-title">🚙 ROOM 1: ARE WE THERE YET?</h1>
+        <div class="difficulty">Difficulty: Easy</div>
+    </header>
+    
+    <div class="container">
+        <div class="timer">Time: <span id="time-counter">00:00</span></div>
+        
+        <div class="challenge-container">
+            <div class="challenge-description">
+                <h2>The Challenge</h2>
+                <p>"Are we there yet?" is a phrase that has existed for as long as there are children, vehicles, and road trips.</p>
+                <p>Write a Python program that:</p>
+                <ol>
+                    <li>First, asks the user "Are we there yet?" using the <code>input()</code> function and stores it in an <code>answer</code> variable.</li>
+                    <li>Then, uses a <code>while</code> loop that asks the user "Are we there yet?" over and over again until they respond with a "Yes".</li>
+                </ol>
+                <p>The output could look something like this:</p>
+                <pre><code>Are we there yet? One more hour
+Are we there yet? Almost there
+Are we there yet? Don't make me pull over
+Are we there yet? Yes</code></pre>
+            </div>
+            
+            <textarea id="code-editor"># Write your solution here
+# "Are we there yet?" challenge
+
+</textarea>
+            
+            <div class="action-buttons">
+                <button class="btn" id="run-btn">Run Code</button>
+                <button class="btn btn-secondary" id="hint-btn">Get Hint</button>
+                <button class="btn btn-secondary" id="reset-btn">Reset</button>
+            </div>
+            
+            <div class="output-console" id="output-console">
+                # Output will appear here
+            </div>
+            
+            <div class="virtual-terminal" id="virtual-terminal">
+                <div id="terminal-output"></div>
+                <div class="input-container" id="input-container" style="display: none;">
+                    <input type="text" id="user-input" placeholder="Type your response here">
+                    <button class="btn" id="submit-input">Submit</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hint-container" id="hint-container">
+            <h3>Hint</h3>
+            <p>Here's a structure to get you started:</p>
+            <pre><code># First, ask the question once
+answer = input("Are we there yet? ")
+
+# Then, use a while loop to keep asking until they say "Yes"
+while answer != "Yes":
+    # Inside the loop, ask the question again
+    answer = input("Are we there yet? ")
+</code></pre>
+            <p>Remember that the condition in the while loop checks if the answer is NOT equal to "Yes". The loop will continue until the condition becomes false (when the answer is "Yes").</p>
+        </div>
+    </div>
+    
+    <div class="success-modal" id="success-modal">
+        <div class="modal-content">
+            <h2>🎉 Challenge Complete! 🎉</h2>
+            <p>You've successfully completed the "Are We There Yet?" challenge!</p>
+            <p>You can now proceed to the next room.</p>
+            <div class="modal-buttons">
+                <button class="btn" id="next-room-btn">Proceed to Room 2</button>
+                <button class="btn btn-secondary" id="return-btn">Return to Hub</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="close-warning" id="close-warning">
+        Closing this window will NOT complete the challenge!
+    </div>
+    
+    <script>
+        // Flag to track if challenge is completed
+        let challengeCompleted = false;
+        
+        // Start timer
+        let seconds = 0;
+        setInterval(function() {
+            seconds++;
+            let minutes = Math.floor(seconds / 60);
+            let remainingSeconds = seconds % 60;
+            document.getElementById('time-counter').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }, 1000);
+        
+        // Elements
+        const codeEditor = document.getElementById('code-editor');
+        const outputConsole = document.getElementById('output-console');
+        const terminalOutput = document.getElementById('terminal-output');
+        const inputContainer = document.getElementById('input-container');
+        const userInput = document.getElementById('user-input');
+        const submitInput = document.getElementById('submit-input');
+        const hintContainer = document.getElementById('hint-container');
+        const successModal = document.getElementById('success-modal');
+        const closeWarning = document.getElementById('close-warning');
+        
+        // Mock Python environment
+        let mockInputs = [];
+        let mockInputIndex = 0;
+        let runningCode = false;
+        let codeCompleted = false;
+        let answerCount = 0;
+        let hasWhileLoop = false;
+        let hasInput = false;
+        
+        // Event listener for Run Code button
+        document.getElementById('run-btn').addEventListener('click', function() {
+            runCode();
+        });
+        
+        // Event listener for Hint button
+        document.getElementById('hint-btn').addEventListener('click', function() {
+            hintContainer.style.display = 'block';
+        });
+        
+        // Event listener for Reset button
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            resetSimulation();
+        });
+        
+        // Event listener for Next Room button
+        document.getElementById('next-room-btn').addEventListener('click', function() {
+            if (challengeCompleted) {
+                // Store completion status in localStorage with a secure token
+                const completionToken = generateCompletionToken();
+                localStorage.setItem('room1_completed', 'true');
+                localStorage.setItem('room1_completion_token', completionToken);
+                
+                // Send completion status to parent window
+                if (window.opener && !window.opener.closed) {
+                    try {
+                        window.opener.markRoomAsCompleted(1, completionToken);
+                    } catch (e) {
+                        console.error('Error updating parent window:', e);
+                    }
+                }
+                
+                // Open Room 2 if possible
+                if (window.opener && !window.opener.closed) {
+                    window.opener.startGame(2);
+                }
+                window.close();
+            }
+        });
+        
+        // Event listener for Return button
+        document.getElementById('return-btn').addEventListener('click', function() {
+            if (challengeCompleted) {
+                // Store completion status in localStorage with a secure token
+                const completionToken = generateCompletionToken();
+                localStorage.setItem('room1_completed', 'true');
+                localStorage.setItem('room1_completion_token', completionToken);
+                
+                // Send completion status to parent window
+                if (window.opener && !window.opener.closed) {
+                    try {
+                        window.opener.markRoomAsCompleted(1, completionToken);
+                    } catch (e) {
+                        console.error('Error updating parent window:', e);
+                    }
+                }
+            }
+            window.close();
+        });
+        
+        // Generate a completion token
+        function generateCompletionToken() {
+            // Create a random token that includes the completion time
+            return 'room1_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15);
+        }
+        
+        // Submit input in virtual terminal
+        submitInput.addEventListener('click', function() {
+            const input = userInput.value;
+            mockInputs.push(input);
+            answerCount++;
+            
+            // Display input in terminal
+            terminalOutput.innerHTML += `<div>Are we there yet? ${input}</div>`;
+            
+            // Reset input field
+            userInput.value = '';
+            
+            // Check if the user entered "Yes"
+            if (input === "Yes") {
+                inputContainer.style.display = 'none';
+                // Check if they've properly used a while loop and input
+                if (hasWhileLoop && hasInput && answerCount > 1) {
+                    codeCompleted = true;
+                    challengeCompleted = true;
+                    outputConsole.innerHTML += '# Challenge completed successfully!\n';
+                    setTimeout(() => {
+                        successModal.style.display = 'flex';
+                    }, 1000);
+                } else {
+                    if (answerCount <= 1) {
+                        outputConsole.innerHTML += '# Your code should ask the question multiple times using a while loop.\n';
+                        outputConsole.innerHTML += '# Try again with a proper while loop implementation.\n';
+                    } else if (!hasWhileLoop) {
+                        outputConsole.innerHTML += '# Your code must use a while loop to repeat the question.\n';
+                    } else if (!hasInput) {
+                        outputConsole.innerHTML += '# Your code must use the input() function to get user responses.\n';
+                    }
+                    resetSimulation();
+                }
+            } else {
+                // Continue the loop
+                setTimeout(() => {
+                    userInput.focus();
+                }, 300);
+            }
+        });
+        
+        // Simulate Python code execution
+        function runCode() {
+            if (runningCode) return;
+            
+            const userCode = codeEditor.value;
+            outputConsole.innerHTML = '# Analyzing your code...\n';
+            resetSimulation();
+            
+            // Simple code analysis
+            hasWhileLoop = userCode.includes('while');
+            hasInput = userCode.includes('input(');
+            
+            if (!hasWhileLoop) {
+                outputConsole.innerHTML = '# Error: Your code must include a while loop.\n';
+                return;
+            }
+            
+            if (!hasInput) {
+                outputConsole.innerHTML = '# Error: Your code must use the input() function.\n';
+                return;
+            }
+            
+            // Check if the code contains a proper loop structure
+            const hasProperLoop = userCode.includes('while') && 
+                                  userCode.toLowerCase().includes('yes') && 
+                                  userCode.includes('input(');
+            
+            if (!hasProperLoop) {
+                outputConsole.innerHTML = '# Your code structure doesn\'t seem correct.\n';
+                outputConsole.innerHTML += '# Make sure your while loop continues until the answer is "Yes".\n';
+                return;
+            }
+            
+            outputConsole.innerHTML = '# Running your code...\n';
+            runningCode = true;
+            
+            // Start the interactive simulation
+            terminalOutput.innerHTML = '';
+            inputContainer.style.display = 'flex';
+            userInput.focus();
+            
+            // Simulate code execution
+            outputConsole.innerHTML += '# Interactive terminal activated below.\n';
+            outputConsole.innerHTML += '# Try typing different responses and finally "Yes" to complete the challenge.\n';
+        }
+        
+        // Reset the simulation
+        function resetSimulation() {
+            runningCode = false;
+            codeCompleted = false;
+            mockInputs = [];
+            mockInputIndex = 0;
+            answerCount = 0;
+            terminalOutput.innerHTML = '';
+            inputContainer.style.display = 'none';
+        }
+        
+        // Show warning when user tries to close the window
+        window.addEventListener('beforeunload', function(e) {
+            if (!challengeCompleted) {
+                closeWarning.style.display = 'block';
+                setTimeout(() => {
+                    closeWarning.style.display = 'none';
+                }, 2000);
+                
+                // This will show a confirmation dialog in most browsers
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+        
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', function() {
+            codeEditor.value = '# Write your code here\n\n# First, ask the question once\n\n# Then, use a while loop to keep asking until they say "Yes"\n';
+            
+            // Check if the user is trying to cheat by opening the success modal directly
+            window.addEventListener('keydown', function(e) {
+                // Prevent F12 and some other development shortcuts
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Handle input submission with Enter key
+            userInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    submitInput.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

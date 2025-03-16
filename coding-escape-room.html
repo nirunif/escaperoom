@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Escape: The Buggy Program</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #0a0a23;
+            color: #00ff00;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: #000;
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 2px solid #00ff00;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .game-title {
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            font-size: 2.5rem;
+            margin: 0;
+        }
+        
+        .subtitle {
+            color: #ccc;
+            font-style: italic;
+        }
+        
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .game-card {
+            background-color: #1a1a35;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        
+        .game-card:hover:not(.locked) {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 255, 0, 0.2);
+        }
+        
+        .game-image {
+            width: 100%;
+            height: 180px;
+            background-color: #2a2a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .game-content {
+            padding: 1.5rem;
+        }
+        
+        .game-content h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+        
+        .difficulty {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+        
+        .difficulty-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+            background-color: #666;
+        }
+        
+        .active {
+            background-color: #00ff00;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: #00aa00;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+        }
+        
+        .cta-button:hover {
+            background-color: #00cc00;
+        }
+        
+        .locked {
+            filter: grayscale(1);
+            position: relative;
+        }
+        
+        .locked::after {
+            content: '🔒';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 0 0 10px #000;
+        }
+        
+        .completion-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #00aa00;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .game-progress {
+            background-color: #333;
+            height: 10px;
+            margin-top: 1rem;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #00ff00;
+            width: 0%;
+        }
+        
+        .welcome-message {
+            background-color: #1a1a35;
+            border-left: 4px solid #00ff00;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            border-top: 1px solid #333;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .game-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="game-title">CODE ESCAPE</h1>
+        <p class="subtitle">Trapped in a Buggy Program - Can You Debug Your Way Out?</p>
+    </header>
+    
+    <div class="container">
+        <div class="welcome-message">
+            <h2>Welcome, Debugger!</h2>
+            <p>You've been trapped inside a malfunctioning program. Your mission is to solve coding challenges to debug the system and escape. Complete each room in sequence to unlock the next challenge.</p>
+            <p>Begin with Room 1 and work your way through all 5 rooms to break free!</p>
+        </div>
+        
+        <div class="game-progress">
+            <div class="progress-bar" style="width: 20%;"></div>
+        </div>
+        
+        <div class="game-grid">
+            <!-- Room 1: Logic Gateway - Unlocked -->
+            <div class="game-card">
+                <span class="completion-badge">In Progress</span>
+                <div class="game-image">
+                    <img src="/img/1.gif" alt="Logic Gateway">
+                </div>
+                <div class="game-content">
+                    <h3>Room 1: Are we there yet?</h3>
+                    <div class="difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot"></div>
+                        <div class="difficulty-dot"></div>
+                    </div>
+                    <p>Solve this simple puzzle to unlock the first gate. Master your loops to not get lost.</p>
+                    <a href="#" class="cta-button" onclick="startGame(1)">Enter Room</a>
+                </div>
+            </div>
+            
+            <!-- Room 2: Syntax Labyrinth - Locked -->
+            <div class="game-card locked">
+                <div class="game-image">
+                    <img src="/img/2.gif" alt="Seasons of the year">
+                </div>
+                <div class="game-content">
+                    <h3>Room 2: Seasons of the year</h3>
+                    <div class="difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot"></div>
+                    </div>
+                    <p>Find and fix syntax errors across multiple programming languages to progress.</p>
+                    <a href="#" class="cta-button" onclick="alert('Complete Room 1 first!')">Locked</a>
+                </div>
+            </div>
+            
+            <!-- Room 3: Function Factory - Locked -->
+            <div class="game-card locked">
+                <div class="game-image">
+                    <img src="/img/3.gif" alt="Function Factory">
+                </div>
+                <div class="game-content">
+                    <h3>Room 3: 🌟 Michelin Stars</h3>
+                    <div class="difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot"></div>
+                    </div>
+                    <p>Implement functions with specific requirements to activate mechanisms that open doors.</p>
+                    <a href="#" class="cta-button" onclick="alert('Complete Room 2 first!')">Locked</a>
+                </div>
+            </div>
+            
+            <!-- Room 4: Data Structure Vault - Locked -->
+            <div class="game-card locked">
+                <div class="game-image">
+                    <img src="/img/4.gif" alt="Data Structure Vault">
+                </div>
+                <div class="game-content">
+                    <h3>Room 4: Data Structure Vault</h3>
+                    <div class="difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                    </div>
+                    <p>Organize and manipulate data in various structures to unlock the vault.</p>
+                    <a href="#" class="cta-button" onclick="alert('Complete Room 3 first!')">Locked</a>
+                </div>
+            </div>
+            
+            <!-- Room 5: Algorithm Arena - Locked -->
+            <div class="game-card locked">
+                <div class="game-image">
+                    <img src="/api/placeholder/300/180" alt="Algorithm Arena">
+                </div>
+                <div class="game-content">
+                    <h3>Room 5: Algorithm Arena</h3>
+                    <div class="difficulty">
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                    </div>
+                    <p>Optimize algorithms under time constraints to reach the final exit.</p>
+                    <a href="#" class="cta-button" onclick="alert('Complete Room 4 first!')">Locked</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>CodeVerse 2025 | @mxssybxnny</p>
+    </footer>
+    
+
+
+    <script>
+    // Function to properly mark a room as completed with validation
+    function markRoomAsCompleted(roomNumber, completionToken) {
+        // Validate the completion token (this is a simple check)
+        if (!completionToken || !completionToken.startsWith('room' + roomNumber)) {
+            console.error('Invalid completion token');
+            return false;
+        }
+        
+        // Update the room's status in the UI
+        if (roomNumber === 1) {
+            document.querySelector('.completion-badge').textContent = 'Completed';
+            document.querySelector('.progress-bar').style.width = '40%';
+            
+            // Unlock Room 2
+            let room2 = document.querySelectorAll('.game-card')[1];
+            room2.classList.remove('locked');
+            room2.querySelector('.cta-button').onclick = function() { startGame(2); };
+            room2.querySelector('.cta-button').textContent = 'Enter Room';
+            
+            // Store completion status
+            localStorage.setItem('room1_completed', 'true');
+            localStorage.setItem('room1_completion_token', completionToken);
+            
+            return true;
+        }
+
+        else if (roomNumber === 2) {
+        // Update Room 2 status
+        let room2 = document.querySelectorAll('.game-card')[1];
+        if (room2.querySelector('.completion-badge')) {
+            room2.querySelector('.completion-badge').textContent = 'Completed';
+        } else {
+            let badge = document.createElement('span');
+            badge.className = 'completion-badge';
+            badge.textContent = 'Completed';
+            room2.appendChild(badge);
+        }
+        document.querySelector('.progress-bar').style.width = '60%';
+        
+        // Unlock Room 3
+        let room3 = document.querySelectorAll('.game-card')[2];
+        room3.classList.remove('locked');
+        room3.querySelector('.cta-button').onclick = function() { startGame(3); };
+        room3.querySelector('.cta-button').textContent = 'Enter Room';
+        
+        // Store completion status
+        localStorage.setItem('room2_completed', 'true');
+        localStorage.setItem('room2_completion_token', completionToken);
+        
+        return true;
+    }
+        
+        return false;
+    }
+   
+
+    // Function to start a game
+    function startGame(roomNumber) {
+        // Check if the previous room is completed before allowing access to the next room
+        if (roomNumber > 1) {
+            const previousRoomCompleted = localStorage.getItem('room' + (roomNumber - 1) + '_completed') === 'true';
+            const hasCompletionToken = localStorage.getItem('room' + (roomNumber - 1) + '_completion_token');
+            
+            if (!previousRoomCompleted || !hasCompletionToken) {
+                alert('You must complete Room ' + (roomNumber - 1) + ' first!');
+                return;
+            }
+        }
+        
+        // Open the room in a new window
+        let gameUrl = 'rooms/' + roomNumber + '.html';
+        let gameWindow = window.open(gameUrl, '_blank', 'width=1000,height=800');
+        
+        // Check if the room was opened successfully
+        if (!gameWindow || gameWindow.closed || typeof gameWindow.closed == 'undefined') {
+            alert('Pop-up blocked! Please allow pop-ups for this site to play the game.');
+        }
+    }
+    
+    // Check for completed rooms when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if Room 1 is completed
+        if (localStorage.getItem('room1_completed') === 'true' && 
+            localStorage.getItem('room1_completion_token')) {
+            // Update Room 1 status
+            document.querySelector('.completion-badge').textContent = 'Completed';
+            document.querySelector('.progress-bar').style.width = '40%';
+            
+            // Unlock Room 2
+            let room2 = document.querySelectorAll('.game-card')[1];
+            room2.classList.remove('locked');
+            room2.querySelector('.cta-button').onclick = function() { startGame(2); };
+            room2.querySelector('.cta-button').textContent = 'Enter Room';
+        }
+        
+        // Check if Room 2 is completed - ADD THIS NEW CODE
+    if (localStorage.getItem('room2_completed') === 'true' && 
+        localStorage.getItem('room2_completion_token')) {
+        // Update Room 2 status
+        let room2 = document.querySelectorAll('.game-card')[1];
+        room2.innerHTML = room2.innerHTML.replace(/<span class="completion-badge">.*?<\/span>/g, '<span class="completion-badge">Completed</span>');
+        document.querySelector('.progress-bar').style.width = '60%';
+        
+        // Unlock Room 3
+        let room3 = document.querySelectorAll('.game-card')[2];
+        room3.classList.remove('locked');
+        room3.querySelector('.cta-button').onclick = function() { startGame(3); };
+        room3.querySelector('.cta-button').textContent = 'Enter Room';
+    }
+        
+    });
+</script>
+</body>
+</html>

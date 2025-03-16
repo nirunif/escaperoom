@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Room 2: Seasons of the Year - Code Escape</title>
+    <style>
+      body {
+        font-family: "Courier New", monospace;
+        background-color: #0a0a23;
+        color: #00ff00;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+      }
+
+      header {
+        background-color: #000;
+        padding: 1rem;
+        text-align: center;
+        border-bottom: 2px solid #00ff00;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+
+      .room-title {
+        color: #00ff00;
+        text-shadow: 0 0 10px #00ff00;
+        font-size: 2rem;
+        margin: 0;
+      }
+
+      .difficulty {
+        color: #ccc;
+        margin-top: 0.5rem;
+      }
+
+      .challenge-container {
+        background-color: #1a1a35;
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .challenge-description {
+        background-color: #101025;
+        padding: 1rem;
+        border-left: 4px solid #00ff00;
+        margin-bottom: 1.5rem;
+      }
+
+      .code-editor {
+        background-color: #0d0d1a;
+        border: 1px solid #333;
+        border-radius: 4px;
+        padding: 1rem;
+        color: #f5f5f5;
+        font-family: "Courier New", monospace;
+        margin-bottom: 1rem;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 200px;
+        background-color: #0d0d1a;
+        color: #f5f5f5;
+        font-family: "Courier New", monospace;
+        padding: 1rem;
+        border: 1px solid #333;
+        border-radius: 4px;
+        resize: vertical;
+        font-size: 16px;
+      }
+
+      pre {
+        background-color: #101025;
+        padding: 1rem;
+        border-radius: 4px;
+        overflow-x: auto;
+        margin: 1rem 0;
+      }
+
+      code {
+        font-family: "Courier New", monospace;
+        color: #f5f5f5;
+      }
+
+      .action-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+      }
+
+      .btn {
+        display: inline-block;
+        background-color: #00aa00;
+        color: #fff;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: background-color 0.3s;
+        cursor: pointer;
+        border: none;
+      }
+
+      .btn:hover {
+        background-color: #00cc00;
+      }
+
+      .btn-secondary {
+        background-color: #333;
+      }
+
+      .btn-secondary:hover {
+        background-color: #444;
+      }
+
+      .output-console {
+        background-color: #000;
+        color: #00ff00;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-top: 1rem;
+        min-height: 150px;
+        font-family: "Courier New", monospace;
+        white-space: pre-wrap;
+      }
+
+      .hint-container {
+        margin-top: 2rem;
+        background-color: #1a1a35;
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 1.5rem;
+        display: none;
+      }
+
+      .success-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        display: none;
+      }
+
+      .modal-content {
+        background-color: #1a1a35;
+        border: 2px solid #00ff00;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        max-width: 500px;
+      }
+
+      .modal-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .timer {
+        font-size: 1.2rem;
+        text-align: right;
+        margin-bottom: 1rem;
+      }
+
+      .virtual-terminal {
+        background-color: #000;
+        border: 1px solid #333;
+        border-radius: 4px;
+        padding: 1rem;
+        margin-top: 1rem;
+        font-family: "Courier New", monospace;
+      }
+
+      .input-container {
+        display: flex;
+        margin-top: 0.5rem;
+      }
+
+      .input-container input {
+        flex-grow: 1;
+        background-color: #000;
+        border: 1px solid #333;
+        padding: 0.5rem;
+        color: #00ff00;
+        font-family: "Courier New", monospace;
+      }
+
+      .input-container button {
+        margin-left: 0.5rem;
+      }
+
+      .close-warning {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #ff3333;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 4px;
+        display: none;
+      }
+
+      .season-emoji {
+        font-size: 3rem;
+        margin: 1rem 0;
+        text-shadow: 0 0 10px #00ff00;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+        <h1 class="room-title">🌟 ROOM 3: MICHELIN STAR RATING</h1>
+        <div class="difficulty">Difficulty: Medium-Hard</div>
+    </header>
+
+    <div class="container">
+      <div class="timer">Time: <span id="time-counter">00:00</span></div>
+
+      <div class="challenge-container">
+        <div class="challenge-description">
+          <h2>The Challenge</h2>
+          <p>🌟 Michelin Star Rating System 🌟</p>
+          <p>
+            Write a JavaScript program that evaluates restaurants for Michelin
+            stars based on multiple criteria:
+          </p>
+          <ol>
+            <li>
+              Ask the user for three scores (each between 0-10) using the
+              <code>prompt()</code> function:
+              <ul>
+                <li>Food quality score</li>
+                <li>Service score</li>
+                <li>Ambiance score</li>
+              </ul>
+            </li>
+            <li>
+              Calculate the weighted average: food quality (60%), service (25%),
+              and ambiance (15%)
+            </li>
+            <li>
+              Award Michelin stars based on the weighted average:
+              <ul>
+                <li>Average below 6: "No stars awarded."</li>
+                <li>Average 6 to 7.49: "🌟 is worth walking to."</li>
+                <li>Average 7.5 to 8.99: "🌟🌟 is worth driving to."</li>
+                <li>Average 9 or higher: "🌟🌟🌟 is worth flying to."</li>
+              </ul>
+            </li>
+            <li>
+              If any individual score is below 4, automatically downgrade by one
+              star level (but never below zero stars)
+            </li>
+            <li>
+              If all three scores are 10, add a special message: "Perfect score!
+              This is a legendary restaurant!"
+            </li>
+          </ol>
+          <p>
+            The final output should show the individual scores, the weighted
+            average (rounded to 2 decimal places), and the star rating with the
+            appropriate message.
+          </p>
+          <p>The output could look something like this:</p>
+          <pre><code>Food Quality (0-10): 9
+            Service (0-10): 8
+            Ambiance (0-10): 7
+            
+            Weighted Average: 8.35
+            Award: 🌟🌟 is worth driving to.
+            
+            Food Quality (0-10): 10
+            Service (0-10): 10
+            Ambiance (0-10): 10
+            
+            Weighted Average: 10.00
+            Award: 🌟🌟🌟 is worth flying to.
+            Perfect score! This is a legendary restaurant!</code></pre>
+        </div>
+
+        <textarea id="code-editor">
+# Write your solution here
+                # "Michelin Star Rating System" challenge
+
+</textarea
+        >
+
+        <div class="action-buttons">
+          <button class="btn" id="run-btn">Run Code</button>
+          <button class="btn btn-secondary" id="hint-btn">Get Hint</button>
+          <button class="btn btn-secondary" id="reset-btn">Reset</button>
+        </div>
+
+        <div class="output-console" id="output-console">
+          # Output will appear here
+        </div>
+
+        <div class="virtual-terminal" id="virtual-terminal">
+          <div id="terminal-output"></div>
+          <div
+            class="input-container"
+            id="input-container"
+            style="display: none"
+          >
+            <input
+              type="text"
+              id="user-input"
+              placeholder="Type your response here"
+            />
+            <button class="btn" id="submit-input">Submit</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint-container" id="hint-container">
+        <h3>Hint</h3>
+        <p>Here's a structure to get you started:</p>
+        <pre><code>// Get the three scores
+            let foodQuality = parseFloat(prompt("Food Quality (0-10): "));
+            let service = parseFloat(prompt("Service (0-10): "));
+            let ambiance = parseFloat(prompt("Ambiance (0-10): "));
+            
+            // Calculate weighted average
+            let weightedAverage = (foodQuality * 0.6) + (service * 0.25) + (ambiance * 0.15);
+            
+            // Determine star rating
+            let starRating;
+            let message;
+            
+            if (weightedAverage >= 9) {
+                starRating = "🌟🌟🌟";
+                message = "is worth flying to.";
+            } else if (/* continue with other conditions */) {
+                // ...
+            }
+            
+            // Check for downgrade condition
+            if (foodQuality < 4 || service < 4 || ambiance < 4) {
+                // Logic to downgrade
+            }
+            
+            // Check for perfect score
+            if (foodQuality === 10 && service === 10 && ambiance === 10) {
+                // Add perfect score message
+            }
+            
+            // Display the results
+            console.log(`Weighted Average: ${weightedAverage.toFixed(2)}`);
+            console.log(`Award: ${starRating} ${message}`);
+            </code></pre>
+            <p>Remember to use <code>parseFloat()</code> to convert the input strings to numbers, and consider all the edge cases mentioned in the challenge.</p>
+      </div>
+    </div>
+
+    <div class="success-modal" id="success-modal">
+      <div class="modal-content">
+        <h2>🎉 Challenge Complete! 🎉</h2>
+        <p>
+          You've successfully completed the "Michelin Star" challenge!
+        </p>
+        <div class="season-emoji" id="season-emoji">🌟🌟🌟</div>
+        <p>You can now proceed to the next room.</p>
+        <div class="modal-buttons">
+          <button class="btn" id="next-room-btn">Proceed to Room 4</button>
+          <button class="btn btn-secondary" id="return-btn">
+            Return to Hub
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="close-warning" id="close-warning">
+      Closing this window will NOT complete the challenge!
+    </div>
+
+    <script>
+      // Flag to track if challenge is completed
+     // let challengeCompleted = false;
+
+      // Start timer
+      let seconds = 0;
+      setInterval(function () {
+        seconds++;
+        let minutes = Math.floor(seconds / 60);
+        let remainingSeconds = seconds % 60;
+        document.getElementById("time-counter").textContent = `${minutes
+          .toString()
+          .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+      }, 1000);
+
+      // Elements
+const codeEditor = document.getElementById("code-editor");
+const outputConsole = document.getElementById("output-console");
+const terminalOutput = document.getElementById("terminal-output");
+const inputContainer = document.getElementById("input-container");
+const userInput = document.getElementById("user-input");
+const submitInput = document.getElementById("submit-input");
+const hintContainer = document.getElementById("hint-container");
+const successModal = document.getElementById("success-modal");
+const closeWarning = document.getElementById("close-warning");
+
+// Mock JavaScript environment
+let mockPromptInputs = [];
+let mockPromptIndex = 0;
+let runningCode = false;
+let codeCompleted = false;
+let challengeCompleted = false;
+
+// Test cases for the Michelin star challenge
+let testCases = [
+  { 
+    inputs: ["8", "7", "6"], 
+    expectedAverage: "7.55",
+    expectedRating: "🌟🌟 is worth driving to."
+  },
+  { 
+    inputs: ["9", "8", "7"], 
+    expectedAverage: "8.35",
+    expectedRating: "🌟🌟 is worth driving to." 
+  },
+  { 
+    inputs: ["10", "10", "10"], 
+    expectedAverage: "10.00",
+    expectedRating: "🌟🌟🌟 is worth flying to.",
+    expectedPerfect: "Perfect score! This is a legendary restaurant!"
+  },
+  { 
+    inputs: ["8", "3", "7"], 
+    expectedAverage: "6.60",
+    expectedRating: "🌟 is worth walking to."  // Downgraded due to low score
+  }
+];
+
+let currentTestCase = 0;
+let hasWeightedCalc = false;
+let hasDowngradeLogic = false;
+let hasPerfectScoreCheck = false;
+let hasCorrectStarRating = false;
+
+// Event listener for Run Code button
+document.getElementById("run-btn").addEventListener("click", function() {
+  runCode();
+});
+
+// Event listener for Hint button
+document.getElementById("hint-btn").addEventListener("click", function() {
+  hintContainer.style.display = "block";
+});
+
+// Event listener for Reset button
+document.getElementById("reset-btn").addEventListener("click", function() {
+  resetSimulation();
+});
+
+// Generate a completion token
+function generateCompletionToken() {
+  return "room3_" + Date.now() + "_" + Math.random().toString(36).substring(2, 15);
+}
+
+// Mock prompt function for testing
+function mockPrompt(promptText) {
+  terminalOutput.innerHTML += `<div>${promptText} ${mockPromptInputs[mockPromptIndex]}</div>`;
+  return mockPromptInputs[mockPromptIndex++];
+}
+
+// Run user's code
+function runCode() {
+  if (runningCode) return;
+
+  const userCode = codeEditor.value;
+  outputConsole.innerHTML = "# Analyzing your code...\n";
+  resetSimulation();
+
+  // Simple code analysis
+  hasWeightedCalc = userCode.includes("0.6") && userCode.includes("0.25") && userCode.includes("0.15");
+  hasDowngradeLogic = userCode.includes("< 4");
+  hasPerfectScoreCheck = userCode.includes("=== 10") || userCode.includes("== 10");
+  hasCorrectStarRating = 
+    userCode.includes("🌟🌟🌟") && 
+    userCode.includes("🌟🌟") && 
+    userCode.includes("worth flying to") && 
+    userCode.includes("worth driving to") && 
+    userCode.includes("worth walking to");
+
+  if (!hasWeightedCalc) {
+    outputConsole.innerHTML = "# Error: Your code must calculate the weighted average (60%, 25%, 15%).\n";
+    return;
+  }
+
+  if (!hasDowngradeLogic) {
+    outputConsole.innerHTML = "# Error: Your code must include downgrade logic for scores below 4.\n";
+    return;
+  }
+
+  if (!hasPerfectScoreCheck) {
+    outputConsole.innerHTML = "# Error: Your code must check for perfect scores.\n";
+    return;
+  }
+
+  if (!hasCorrectStarRating) {
+    outputConsole.innerHTML = "# Error: Your code must include proper star ratings and messages.\n";
+    return;
+  }
+
+  outputConsole.innerHTML = "# Running your code...\n";
+  runningCode = true;
+  currentTestCase = 0;
+
+  executeTestCase();
+}
+
+// Execute the current test case
+function executeTestCase() {
+  if (currentTestCase >= testCases.length) {
+    // All test cases passed
+    codeCompleted = true;
+    challengeCompleted = true;
+    outputConsole.innerHTML += "# All test cases passed!\n";
+    outputConsole.innerHTML += "# Challenge completed successfully!\n";
+    setTimeout(() => {
+      successModal.style.display = "flex";
+    }, 1000);
+    return;
+  }
+
+  terminalOutput.innerHTML = "";
+  outputConsole.innerHTML += `# Testing case ${currentTestCase + 1}/${testCases.length}\n`;
+
+  // Set up mock inputs for this test case
+  mockPromptInputs = testCases[currentTestCase].inputs;
+  mockPromptIndex = 0;
+
+  try {
+    // Prepare the environment
+    const consoleOutput = [];
+    const originalConsoleLog = console.log;
+    console.log = function() {
+      const message = Array.from(arguments).join(' ');
+      consoleOutput.push(message);
+      terminalOutput.innerHTML += `<div>${message}</div>`;
+    };
+    
+    // Replace prompt function for testing
+    window.prompt = mockPrompt;
+
+    // Execute user code
+    const userCode = codeEditor.value;
+    const wrappedCode = `
+      try {
+        ${userCode}
+      } catch(e) {
+        console.log("Error:", e.message);
+      }
+    `;
+    
+    eval(wrappedCode);
+
+    // Restore console.log
+    console.log = originalConsoleLog;
+
+    // Check if the output contains the expected results
+    const output = consoleOutput.join('\n');
+    const expectedAverage = testCases[currentTestCase].expectedAverage;
+    const expectedRating = testCases[currentTestCase].expectedRating;
+    const expectedPerfect = testCases[currentTestCase].expectedPerfect;
+
+    if (output.includes(expectedAverage) && output.includes(expectedRating)) {
+      // Check for perfect score message if applicable
+      if (expectedPerfect && !output.includes(expectedPerfect)) {
+        outputConsole.innerHTML += `# Test case ${currentTestCase + 1} failed: Missing perfect score message.\n`;
+        resetSimulation();
+        return;
+      }
+      
+      currentTestCase++;
+      setTimeout(executeTestCase, 1000);
+    } else {
+      outputConsole.innerHTML += `# Test case ${currentTestCase + 1} failed.\n`;
+      outputConsole.innerHTML += `# Expected average: ${expectedAverage} and rating: ${expectedRating}\n`;
+      resetSimulation();
+    }
+  } catch (error) {
+    outputConsole.innerHTML += `# Error executing code: ${error.message}\n`;
+    resetSimulation();
+  }
+}
+
+// Reset the simulation
+function resetSimulation() {
+  runningCode = false;
+  codeCompleted = false;
+  mockPromptInputs = [];
+  mockPromptIndex = 0;
+  currentTestCase = 0;
+  terminalOutput.innerHTML = "";
+}
+
+// Event listeners for successful completion
+document.getElementById("next-room-btn").addEventListener("click", function() {
+  if (challengeCompleted) {
+    // Store completion status in localStorage with a secure token
+    const completionToken = generateCompletionToken();
+    localStorage.setItem("room3_completed", "true");
+    localStorage.setItem("room3_completion_token", completionToken);
+
+    // Send completion status to parent window
+    if (window.opener && !window.opener.closed) {
+      try {
+        window.opener.markRoomAsCompleted(3, completionToken);
+      } catch (e) {
+        console.error("Error updating parent window:", e);
+      }
+    }
+
+    // Open Room 4 if possible
+    if (window.opener && !window.opener.closed) {
+      window.opener.startGame(4);
+    }
+    window.close();
+  }
+});
+
+document.getElementById("return-btn").addEventListener("click", function() {
+  if (challengeCompleted) {
+    // Store completion status in localStorage with a secure token
+    const completionToken = generateCompletionToken();
+    localStorage.setItem("room3_completed", "true");
+    localStorage.setItem("room3_completion_token", completionToken);
+
+    // Send completion status to parent window
+    if (window.opener && !window.opener.closed) {
+      try {
+        window.opener.markRoomAsCompleted(3, completionToken);
+      } catch (e) {
+        console.error("Error updating parent window:", e);
+      }
+    }
+  }
+  window.close();
+});
+
+// Initial setup
+document.addEventListener("DOMContentLoaded", function() {
+  codeEditor.value = `// Write your Michelin Star Rating code here
+
+// Get the three scores from the user
+let foodQuality = parseFloat(prompt("Food Quality (0-10): "));
+let service = parseFloat(prompt("Service (0-10): "));
+let ambiance = parseFloat(prompt("Ambiance (0-10): "));
+
+// Calculate weighted average - your code here
+
+// Determine star rating - your code here
+
+// Check for downgrade condition - your code here
+
+// Check for perfect score - your code here
+
+// Display the results - your code here
+`;
+
+  // Check if the user is coming from Room 2
+  const requiredRoomCompleted = localStorage.getItem("room2_completed");
+  if (requiredRoomCompleted !== "true") {
+    // Create a warning message
+    const warningContainer = document.createElement("div");
+    warningContainer.style.position = "fixed";
+    warningContainer.style.top = "0";
+    warningContainer.style.left = "0";
+    warningContainer.style.width = "100%";
+    warningContainer.style.height = "100%";
+    warningContainer.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
+    warningContainer.style.color = "#ff3333";
+    warningContainer.style.display = "flex";
+    warningContainer.style.flexDirection = "column";
+    warningContainer.style.alignItems = "center";
+    warningContainer.style.justifyContent = "center";
+    warningContainer.style.zIndex = "1000";
+    warningContainer.style.padding = "2rem";
+    warningContainer.style.textAlign = "center";
+
+    const warningTitle = document.createElement("h2");
+    warningTitle.textContent = "⚠️ Access Denied ⚠️";
+    warningTitle.style.color = "#ff3333";
+    warningTitle.style.marginBottom = "1rem";
+
+    const warningText = document.createElement("p");
+    warningText.textContent = "You must complete Room 2 before accessing Room 3!";
+    warningText.style.fontSize = "1.2rem";
+    warningText.style.marginBottom = "2rem";
+
+    const returnButton = document.createElement("button");
+    returnButton.textContent = "Return to Hub";
+    returnButton.className = "btn";
+    returnButton.style.backgroundColor = "#ff3333";
+    returnButton.addEventListener("click", function() {
+      window.close();
+    });
+
+    warningContainer.appendChild(warningTitle);
+    warningContainer.appendChild(warningText);
+    warningContainer.appendChild(returnButton);
+
+    document.body.appendChild(warningContainer);
+  }
+      });
+    </script>
+  </body>
+</html>
